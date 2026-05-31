@@ -20,17 +20,16 @@ public class DeadlockExample {
             }
         }, "Thread-1");
 
-        // Thread 2: Wants Lock B then Lock A
+        // Thread 2: Acquires locks in the same order as Thread 1 (A then B) to prevent deadlock
         Thread thread2 = new Thread(() -> {
-            synchronized (lockB) {
-                System.out.println("Thread 2: Holding Lock B...");
-                
-                // Sleep to ensure Thread 1 has enough time to lock Lock A
+            synchronized (lockA) {
+                System.out.println("Thread 2: Holding Lock A...");
+
                 try { Thread.sleep(50); } catch (InterruptedException e) {}
-                
-                System.out.println("Thread 2: Waiting for Lock A...");
-                synchronized (lockA) {
-                    System.out.println("Thread 2: Acquired Lock A!");
+
+                System.out.println("Thread 2: Waiting for Lock B...");
+                synchronized (lockB) {
+                    System.out.println("Thread 2: Acquired Lock B!");
                 }
             }
         }, "Thread-2");
